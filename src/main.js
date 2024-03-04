@@ -25,8 +25,6 @@ submitForm.addEventListener('submit', event => {
   }
 
   getImages();
-
-  loadMoreBtn.classList.remove('hidden');
 });
 
 loadMoreBtn.addEventListener('click', () => {

@@ -30,6 +30,7 @@ export async function getImages() {
     const data = response.data;
 
     if (data.hits.length === 0) {
+      loadMoreBtn.classList.add('hidden');
       iziToast.show({
         position: 'topRight',
         timeout: 3500,
@@ -41,12 +42,21 @@ export async function getImages() {
       });
     } else {
       render(data.hits);
+      if (data.hits.length >= 15) {
+        loadMoreBtn.classList.remove('hidden');
+      } else {
+        loadMoreBtn.classList.add('hidden');
+      }
     }
   } catch (error) {
-    alert('Error while rendering images');
+    iziToast.error({
+      title: 'Error',
+      message: 'Error while rendering images',
+      position: 'topRight',
+      timeout: 2500,
+    });
   } finally {
     loader.classList.add('hidden');
-    loadMoreBtn.classList.remove('hidden');
   }
 }
 
@@ -56,18 +66,25 @@ export async function loadMoreImages() {
   const query = searchInput.value.trim();
   const LINK = `${BASE_URL}?key=${KEY}&q=${query}&${otherParams}&page=${page}`;
 
+  let data;
+
   try {
     const response = await axios.get(LINK);
-    const data = response.data;
+    data = response.data;
     totalHits = data.totalHits;
 
     render(data.hits);
 
     smoothScrollToGallery();
   } catch (error) {
-    alert('Error while rendering images');
+    iziToast.error({
+      title: 'Error',
+      message: 'Error while rendering images',
+      position: 'topRight',
+      timeout: 2500,
+    });
   } finally {
-    if (page * 15 >= totalHits) {
+    if (data && page * 15 >= data.totalHits) {
       loadMoreBtn.classList.add('hidden');
 
       iziToast.show({

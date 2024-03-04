@@ -26,10 +26,12 @@ export function render(data) {
           </div>`;
   }
 
+  let markup = '';
   data.forEach(image => {
-    const markup = imageTemplate(image);
-    container.insertAdjacentHTML('beforeend', markup);
+    markup += imageTemplate(image);
   });
+
+  container.insertAdjacentHTML('beforeend', markup);
 
   const gallery = new SimpleLightbox('.large-image-link');
   gallery.refresh();
